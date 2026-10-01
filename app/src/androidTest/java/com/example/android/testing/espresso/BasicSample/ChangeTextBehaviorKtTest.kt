@@ -61,29 +61,49 @@ class ChangeTextBehaviorKtTest {
      * [androidx.test.rule.ActivityTestRule].
      */
     @get:Rule var activityScenarioRule = activityScenarioRule<MainActivity>()
-    val STRING_TO_BE_TYPED = "I like mobile testing"
+    val FAVOURITE_FOOD = "vermisheli"
+    val FAVOURITE_MOVIE = "LOTR"
+    val SECOND_MOVIE = "the matrix"
+
 
     @Test
-    fun changeText_sameActivity() {
+    fun changeText_sameActivity_updateTextViewAndValidate() {
 
         // Type text and then press the button.
         onView(withId(R.id.editTextUserInput))
-                .perform(typeText(STRING_TO_BE_TYPED), closeSoftKeyboard())
-        onView(withId(R.id.changeTextBt)).perform(click())
+                .perform(typeText(FAVOURITE_FOOD), closeSoftKeyboard())
+        onView(withId(R.id.changeTextBt))
+            .perform(click())
 
 
         // Check that the text was changed.
-        onView(withId(R.id.textToBeChanged)).check(matches(withText(STRING_TO_BE_TYPED)))
+        onView(withId(R.id.textToBeChanged))
+            .check(matches(withText(FAVOURITE_FOOD)))
     }
 
     @Test
-    fun changeText_newActivity() {
+    fun changeText_newActivity_displayEnteredTextAndValidate() {
         // Type text and then press the button.
-        onView(withId(R.id.editTextUserInput)).perform(typeText(STRING_TO_BE_TYPED),
+        onView(withId(R.id.editTextUserInput))
+            .perform(typeText(FAVOURITE_MOVIE),
                 closeSoftKeyboard())
-        onView(withId(R.id.activityChangeTextBtn)).perform(click())
+        onView(withId(R.id.changeTextBt))
+            .perform(click())
+
+        onView(withId(R.id.textToBeChanged))
+            .check(matches(withText(FAVOURITE_MOVIE)))
+
+        onView(withId(R.id.editTextUserInput))
+            .perform(clearText())
 
         // This view is in a different Activity, no need to tell Espresso.
-        onView(withId(R.id.show_text_view)).check(matches(withText(STRING_TO_BE_TYPED)))
+        onView(withId(R.id.editTextUserInput))
+            .perform(typeText(SECOND_MOVIE), closeSoftKeyboard())
+
+        onView(withId(R.id.activityChangeTextBtn))
+            .perform(click())
+
+        onView(withId(R.id.show_text_view))
+            .check(matches(withText(SECOND_MOVIE)))
     }
 }
